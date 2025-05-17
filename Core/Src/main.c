@@ -101,9 +101,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	    adc_value = read_adc1();
-	    voltage = adc_to_volt_constant * adc_value;
-	    HAL_Delay(100);
+      HAL_ADC_Start(&hadc1);
+      if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
+      {
+          adc_value = HAL_ADC_GetValue(&hadc1);
+      }
+      HAL_ADC_Stop(&hadc1);
+      voltage = adc_to_volt_constant * adc_value;
+      HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -229,15 +234,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int32_t read_adc1(void)
-{
-    HAL_ADC_Start(&hadc1);
-    if (HAL_ADC_PollForConversion(&hadc1, 5) == HAL_OK)
-    {
-        return HAL_ADC_GetValue(&hadc1);
-    }
-    return -1;
-}
 
 /* USER CODE END 4 */
 
